@@ -8,6 +8,6 @@ public class Vehiculo implements Cloneable {
     public Vehiculo() {}
 
     public Vehiculo clonar() throws CloneNotSupportedException {
-        return (Vehiculo) this.clone();
+        return (Vehiculo) this.clone(); // con el (Vehiculo) lo fuerzo a devolver un objeto tipo Vehiculo
     }
 }

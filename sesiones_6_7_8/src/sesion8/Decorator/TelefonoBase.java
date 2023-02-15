@@ -1,8 +1,12 @@
 package sesion8.Decorator;
 
-public class TelefonoBase implements Telefono {
+public class TelefonoBase extends TelefonoDecorator {
+    public TelefonoBase(Telefono telefono) {
+        super(telefono);
+    }
     @Override
     public void crear() {
+        super.crear();
         System.out.println("Soy un teléfono basico. Mis carácteristicas son: ");
 
         this.tengoGSM();

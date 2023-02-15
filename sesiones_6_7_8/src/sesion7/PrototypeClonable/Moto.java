@@ -13,7 +13,7 @@ public class Moto extends Vehiculo implements Cloneable {
     }
 
     public Moto clonar() throws CloneNotSupportedException {
-        return (Moto) this.clone();
+        return (Moto) this.clone(); // con el (Moto) lo fuerzo a devolver un objeto tipo moto
     }
 
 }

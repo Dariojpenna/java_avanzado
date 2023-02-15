@@ -10,7 +10,7 @@ public class Vehiculo {
 
     public Vehiculo(String marca) {
         this.marca = marca;
-    }
+    } //constructor instanciado con marca
 
     public String getMarca() {
         return marca;
