@@ -71,6 +71,8 @@ public class main {
         optionsParser.registerOption("maxval");
         optionsParser.parse();
 
+        System.out.println("minval: " + optionsParser.getOption("minval"));
+
         int minval = Integer.parseInt(optionsParser.getOption("minval"));
         int maxval = Integer.parseInt(optionsParser.getOption("maxval"));
 

@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class Usuarios {
     public String ficheroDatos = "usuarios.txt";
 
+
+
     private ArrayList<Usuario> convertirUsuariosFicheroEnArrayList() {
         ArrayList<Usuario> usuarios = new ArrayList();
 

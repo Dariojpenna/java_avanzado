@@ -6,4 +6,5 @@ public class Usuario {
     public String apellidos;
     public String email = "";
     public int nivelAcceso;
+    public String telefono;
 }

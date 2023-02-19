@@ -1,22 +1,26 @@
 package Sesion21.Inicial;
 
 import java.io.File;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Usuarios {
-    public String ficheroDatos = "usuarios.txt";
+  //  public String ficheroDatos = "usuarios.txt";
 
-    public ArrayList<Usuario> listarUsuarios() {
+    public ArrayList<Usuario> pasasarUsuariosFicheroArray() {
         ArrayList<Usuario> usuarios = new ArrayList();
 
         try {
-            Scanner scanner = new Scanner(new File(ficheroDatos));
+            Scanner scanner = new Scanner(new File("usuarios2.txt"));
 
             while (scanner.hasNext()) {
                 String usuarioActual = scanner.next();
-                String []partes = usuarioActual.split(",");
+                String[] partes = usuarioActual.split(",");
 
                 Usuario usuario = new Usuario();
                 usuario.nombreUsuario = partes[0];
@@ -24,143 +28,118 @@ public class Usuarios {
                 usuario.apellidos = partes[2];
                 usuario.email = partes[3];
                 usuario.nivelAcceso = Integer.parseInt(partes[4]);
+                usuario.telefono = partes[5];
 
                 usuarios.add(usuario);
             }
 
             scanner.close();
-        } catch (Exception e) {
-        }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
 
+        }
         return usuarios;
     }
 
+//    public ArrayList<Usuario> listarUsuarios() {
+//        ArrayList<Usuario> usuarios = new ArrayList();
+//
+//        try {
+//            Scanner scanner = new Scanner(new File(ficheroDatos));
+//
+//            while (scanner.hasNext()) {
+//                String usuarioActual = scanner.next();
+//                String []partes = usuarioActual.split(",");
+//
+//                Usuario usuario = new Usuario();
+//                usuario.nombreUsuario = partes[0];
+//                usuario.nombre = partes[1];
+//                usuario.apellidos = partes[2];
+//                usuario.email = partes[3];
+//                usuario.nivelAcceso = Integer.parseInt(partes[4]);
+//
+//                usuarios.add(usuario);
+//            }
+//
+//            scanner.close();
+//        } catch (Exception e) {
+//        }
+//
+//        return usuarios;
+//    }
+
     public Usuario obtenerUsuario(String username) {
-        try {
-            Scanner scanner = new Scanner(new File(ficheroDatos));
-            ArrayList<String> usuarios = new ArrayList();
 
-            while (scanner.hasNext()) {
-                usuarios.add(scanner.next());
-            }
+        ArrayList<Usuario> usuarios = pasasarUsuariosFicheroArray();
 
-            scanner.close();
-
-            for (String usuario : usuarios) {
-                String []partes = usuario.split(",");
-                String nombreUsuarioActual = partes[0];
-                System.out.println(username + " " + nombreUsuarioActual);
-
-                if (!nombreUsuarioActual.equalsIgnoreCase(username)) {
-                    continue;
-                }
-
-                Usuario usuarioRetorno = new Usuario();
-                usuarioRetorno.nombreUsuario = partes[0];
-                usuarioRetorno.nombre = partes[1];
-                usuarioRetorno.apellidos = partes[2];
-                usuarioRetorno.email = partes[3];
-                usuarioRetorno.nivelAcceso = Integer.parseInt(partes[4]);
-                return usuarioRetorno;
-            }
-
-        } catch (Exception e) {
-        }
+        for(Usuario usuario : usuarios)
+            if (usuario.nombreUsuario.equalsIgnoreCase(username))
+                return usuario;
 
         return null;
     }
 
     public void crearUsuario(Usuario usuario) {
-        try {
-            Scanner scanner = new Scanner(new File(ficheroDatos));
-            ArrayList<String> usuarios = new ArrayList();
+        ArrayList<Usuario> usuarios = pasasarUsuariosFicheroArray();
 
-            while (scanner.hasNext()) {
-                usuarios.add(scanner.next());
-            }
+        if (obtenerUsuario(usuario.nombreUsuario)!=null)
+            System.out.println("El usuario ya exisite");
+        else {
+            try {
+                PrintStream printStream = new PrintStream("usuarios2.txt");
 
-            scanner.close();
-
-            for (String usuarioActual : usuarios) {
-                String []partes = usuarioActual.split(",");
-                String nombreUsuarioActual = partes[0];
-
-                if (nombreUsuarioActual.toLowerCase().equals(usuario.nombreUsuario.toLowerCase())) {
-                    return;
+                for (Usuario usuarioExistente : usuarios) {
+                    printStream.println(separarUsuarioPorComas(usuarioExistente));
                 }
+                printStream.println(separarUsuarioPorComas(usuario));
+
+            } catch (Exception e) {
+                System.out.println("-WTF");
             }
-        } catch (Exception e) {
+
         }
 
-        try {
-            PrintStream printStream = new PrintStream(ficheroDatos);
-            String buffer = "";
+    }
 
-            for (Usuario usuarioExistente : listarUsuarios()) {
-                buffer += usuarioExistente.nombreUsuario + ","
-                        + usuarioExistente.nombre + ","
-                        + usuarioExistente.apellidos + ","
-                        + usuarioExistente.email + ","
-                        + usuarioExistente.nivelAcceso;
-            }
-
-            buffer += usuario.nombreUsuario + ","
+    public String separarUsuarioPorComas (Usuario usuario){
+        return   usuario.nombreUsuario + ","
                 + usuario.nombre + ","
                 + usuario.apellidos + ","
                 + usuario.email + ","
-                + usuario.nivelAcceso;
-
-            printStream.println(buffer);
-        } catch (Exception e) {
-
-        }
+                + usuario.nivelAcceso + ","
+                + usuario.telefono;
     }
-
-    public void crearUsuarioOld(Usuario usuario) {
-        try {
-            PrintStream printStream = new PrintStream(ficheroDatos);
-            printStream.println(usuario.nombreUsuario + ","
-                    + usuario.nombre + ","
-                    + usuario.apellidos + ","
-                    + usuario.email + ","
-                    + usuario.nivelAcceso);
-
-        } catch (Exception e) {
-        }
-    }
-
     public void borrarUsuario(String username) {
-        ArrayList<String> usuarios = new ArrayList();
+        ArrayList<Usuario> usuarios = pasasarUsuariosFicheroArray();
 
-        try {
-            Scanner scanner = new Scanner(new File(ficheroDatos));
-
-            while (scanner.hasNext()) {
-                usuarios.add(scanner.next());
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).nombreUsuario.equalsIgnoreCase(username)) {
+                usuarios.remove(i);
             }
-
-            scanner.close();
-        } catch (Exception e) {
         }
 
-        try {
-            PrintStream printStream = new PrintStream(ficheroDatos);
+        try{
+            PrintStream printStream = new PrintStream("usuarios2.txt");
 
-            for (String usuarioActual : usuarios) {
-                String[] partes = usuarioActual.split(",");
-                String nombreUsuarioActual = partes[0];
+            for (Usuario usuario: usuarios){
 
-                if (nombreUsuarioActual.toLowerCase().equals(username)) {
-                    continue;
-                }
-
-                printStream.println(partes[0] + ","
-                        + partes[1] + ","
-                        + partes[2] + ","
-                        + partes[3] + ","
-                        + partes[4]);
+                String buffer = separarUsuarioPorComas(usuario);
+                printStream.println (buffer);
             }
-        } catch (Exception e) {
+
+
+        }catch (IOException e){
+
+        }
+
+
+    }
+
+    public void obtenerListado (){
+
+        for (Usuario usuario : pasasarUsuariosFicheroArray()){
+            System.out.println( usuario.nombreUsuario);
         }
     }
+
 }
